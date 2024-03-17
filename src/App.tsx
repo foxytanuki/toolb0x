@@ -15,7 +15,7 @@ const App: React.FC = () => {
         minHeight="100vh"
         bg={colorMode === "light" ? "gray.100" : "gray.900"}
       >
-        <VStack spacing={8} py={8}>
+        <VStack spacing={8}>
           <Box
             as="header"
             w="100%"
