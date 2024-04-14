@@ -2,12 +2,22 @@ import React from "react";
 import { Select } from "@chakra-ui/react";
 import {
   Chain,
-  goerli,
   mainnet,
   sepolia,
   polygon,
-  polygonMumbai,
   polygonAmoy,
+  blast,
+  blastSepolia,
+  base,
+  baseSepolia,
+  manta,
+  mantaTestnet,
+  optimism,
+  optimismSepolia,
+  arbitrum,
+  arbitrumSepolia,
+  zkSync,
+  zkSyncSepoliaTestnet,
 } from "viem/chains";
 
 interface ChainSelectorProps {
@@ -17,11 +27,21 @@ interface ChainSelectorProps {
 
 const chains: Chain[] = [
   mainnet,
-  goerli,
   sepolia,
   polygon,
-  polygonMumbai,
   polygonAmoy,
+  blast,
+  blastSepolia,
+  base,
+  baseSepolia,
+  manta,
+  mantaTestnet,
+  optimism,
+  optimismSepolia,
+  arbitrum,
+  arbitrumSepolia,
+  zkSync,
+  zkSyncSepoliaTestnet,
 ];
 
 const ChainSelector: React.FC<ChainSelectorProps> = ({

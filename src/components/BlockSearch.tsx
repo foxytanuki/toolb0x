@@ -11,35 +11,32 @@ import {
   RadioGroup,
   Radio,
 } from "@chakra-ui/react";
+import { Chain } from "viem/chains";
 import { useBlocks } from "../hooks/useBlocks";
 import BlockInfo from "./BlockInfo";
 import ErrorMessage from "./ErrorMessage";
 import LoadingSpinner from "./LoadingSpinner";
-import { Chain } from "viem";
-import { mainnet } from "viem/chains";
-import ChainSelector from "./ChainSelector";
 import DateTimePicker from "./DateTimePicker";
 import { createPublicClient, http } from "viem";
 
-const BlockSearch: React.FC = () => {
+interface BlockSearchProps {
+  chain: Chain;
+}
+
+const BlockSearch: React.FC<BlockSearchProps> = ({ chain }) => {
   const [blockNumber, setBlockNumber] = useState<string>("");
   const [timestamp, setTimestamp] = useState<string>("");
   const [blockNumberError, setBlockNumberError] = useState<string>("");
   const [timestampError, setTimestampError] = useState<string>("");
-  const [chain, setChain] = useState<Chain>(mainnet);
   const [dateTime, setDateTime] = useState("");
   const [pageSize] = useState(1);
   const [timestampType, setTimestampType] = useState("unix");
-  const [searchType, setSearchType] = useState("blockNumber");
+  const [searchType, setSearchType] = useState("timestamp");
 
   const client = createPublicClient({
     chain,
     transport: http(),
   });
-
-  const handleChainChange = (selectedChain: Chain) => {
-    setChain(selectedChain);
-  };
 
   const {
     data: blocks = [],
@@ -79,14 +76,10 @@ const BlockSearch: React.FC = () => {
   return (
     <Box>
       <VStack spacing={4} align="stretch">
-        <ChainSelector
-          selectedChain={chain}
-          onChainChange={handleChainChange}
-        />
         <RadioGroup value={searchType} onChange={setSearchType}>
           <HStack spacing={4}>
-            <Radio value="blockNumber">Block Number</Radio>
             <Radio value="timestamp">Timestamp</Radio>
+            <Radio value="blockNumber">Block Number</Radio>
           </HStack>
         </RadioGroup>
         {searchType === "blockNumber" ? (

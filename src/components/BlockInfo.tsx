@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Heading, Text, VStack, HStack, Link } from "@chakra-ui/react";
+// import TransactionGasStats from "./TransactionGasStats";
 import TransactionList from "./TransactionList";
 import { BlockData } from "../hooks/useBlocks";
 import { Chain, PublicClient } from "viem";
@@ -14,12 +15,10 @@ const BlockInfo: React.FC<BlockInfoProps> = ({ block, chain, client }) => {
   const explorerUrl = chain.blockExplorers?.default?.url;
   const explorerName = chain.blockExplorers?.default?.name;
 
-  console.log(block);
-
   return (
     <Box p={4} borderWidth={1} borderRadius="md">
       <VStack spacing={4} align="stretch">
-        <Heading as="h2" size="xl">
+        <Heading as="h2" fontFamily="Jersey 25">
           Block:{" "}
           <Link
             href={`${explorerUrl}/block/${block.number.toString()}`}
@@ -60,7 +59,9 @@ const BlockInfo: React.FC<BlockInfoProps> = ({ block, chain, client }) => {
             block.miner
           )}
         </Text>
+        {/* <TransactionGasStats client={client} blockNumber={block.number} /> */}
         <TransactionList transactions={block.transactions} chain={chain} />
+
         <HStack>
           <Box>
             <Text fontSize="xs" color="gray.500">
