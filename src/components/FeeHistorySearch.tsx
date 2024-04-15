@@ -3,7 +3,7 @@ import { useFeeHistory } from "../hooks/useFeeHistory";
 import { usePolygonGasStation } from "../hooks/usePolygonGasStation";
 import { formatGwei } from "viem";
 import LoadingSpinner from "./LoadingSpinner";
-import { useChain } from "../contexts/ChainContext";
+import { useChain } from "../hooks/useChain";
 
 const FeeHistorySearch = () => {
   const { colorMode } = useColorMode();

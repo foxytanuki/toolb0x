@@ -18,7 +18,7 @@ import {
   zkSync,
   zkSyncSepoliaTestnet,
 } from "viem/chains";
-import { useChain } from "../contexts/ChainContext";
+import { useChain } from "../hooks/useChain";
 
 const chains: Chain[] = [
   mainnet,

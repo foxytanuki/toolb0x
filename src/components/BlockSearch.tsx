@@ -13,7 +13,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { useBlocks } from "../hooks/useBlocks";
-import { useChain } from "../contexts/ChainContext";
+import { useChain } from "../hooks/useChain";
 import BlockInfo from "./BlockInfo";
 import ErrorMessage from "./ErrorMessage";
 import LoadingSpinner from "./LoadingSpinner";
