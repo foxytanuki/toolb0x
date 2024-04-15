@@ -16,8 +16,8 @@ const theme = extendTheme({
     },
   },
   fonts: {
-    heading: "Open Sans, sans-serif",
-    body: "Roboto, sans-serif",
+    heading: "Jersey 25, sans-serif",
+    body: "Jersey 25, Roboto, sans-serif",
   },
   styles: {
     global: {
