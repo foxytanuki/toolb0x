@@ -18,7 +18,6 @@ import { Route as rootRoute } from './routes/__root'
 
 const FeeLazyImport = createFileRoute('/fee')()
 const BlocksLazyImport = createFileRoute('/blocks')()
-const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
@@ -33,11 +32,6 @@ const BlocksLazyRoute = BlocksLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/blocks.lazy').then((d) => d.Route))
 
-const AboutLazyRoute = AboutLazyImport.update({
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
-
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
@@ -49,10 +43,6 @@ declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
       preLoaderRoute: typeof IndexLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/about': {
-      preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
     '/blocks': {
@@ -70,7 +60,6 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
-  AboutLazyRoute,
   BlocksLazyRoute,
   FeeLazyRoute,
 ])

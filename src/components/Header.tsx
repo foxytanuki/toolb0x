@@ -1,15 +1,8 @@
 import { Box, IconButton, useColorMode } from "@chakra-ui/react";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import ChainSelector from "./ChainSelector";
-import { Chain } from "viem/chains";
 
-export default function Header({
-  selectedChain,
-  onChainChange,
-}: {
-  selectedChain: Chain;
-  onChainChange: (chain: Chain) => void;
-}) {
+export default function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
   return (
     <Box
@@ -23,10 +16,7 @@ export default function Header({
     >
       <Box display="flex" justifyContent="end" ml={4} mr={4}>
         <Box mr={4}>
-          <ChainSelector
-            selectedChain={selectedChain}
-            onChainChange={onChainChange}
-          />
+          <ChainSelector />
         </Box>
         <IconButton
           aria-label="Toggle color mode"

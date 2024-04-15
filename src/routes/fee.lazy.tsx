@@ -1,5 +1,8 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
+import FeeHistorySearch from "../components/FeeHistorySearch";
 
 export const Route = createLazyFileRoute("/fee")({
-  component: () => <div>Hello /fee!</div>,
+  component: () => {
+    return <FeeHistorySearch />;
+  },
 });

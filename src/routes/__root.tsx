@@ -9,7 +9,6 @@ import "../index.css";
 export const Route = createRootRoute({
   component: function RootComponent() {
     const { colorMode } = useColorMode();
-    const [chain, setChain] = useState<Chain>(mainnet);
     return (
       <>
         <div className="p-2 flex gap-2"></div>
@@ -57,20 +56,9 @@ export const Route = createRootRoute({
                 BlockSearch
               </Button>
             </Link>
-            <Link to="/about" className="[&.active]:font-bold">
-              <Button
-                mb={4}
-                width="100%"
-                colorScheme="blue"
-                variant="outline"
-                size="md"
-              >
-                About
-              </Button>
-            </Link>
           </Box>
           <VStack w="full">
-            <Header selectedChain={chain} onChainChange={setChain} />
+            <Header />
             <Outlet />
           </VStack>
         </Flex>

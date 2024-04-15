@@ -10,20 +10,19 @@ import {
   HStack,
   RadioGroup,
   Radio,
+  useColorMode,
 } from "@chakra-ui/react";
-import { Chain } from "viem/chains";
 import { useBlocks } from "../hooks/useBlocks";
+import { useChain } from "../contexts/ChainContext";
 import BlockInfo from "./BlockInfo";
 import ErrorMessage from "./ErrorMessage";
 import LoadingSpinner from "./LoadingSpinner";
 import DateTimePicker from "./DateTimePicker";
 import { createPublicClient, http } from "viem";
 
-interface BlockSearchProps {
-  chain: Chain;
-}
-
-const BlockSearch: React.FC<BlockSearchProps> = ({ chain }) => {
+const BlockSearch = () => {
+  const { colorMode } = useColorMode();
+  const { chain } = useChain();
   const [blockNumber, setBlockNumber] = useState<string>("");
   const [timestamp, setTimestamp] = useState<string>("");
   const [blockNumberError, setBlockNumberError] = useState<string>("");
@@ -74,7 +73,16 @@ const BlockSearch: React.FC<BlockSearchProps> = ({ chain }) => {
   };
 
   return (
-    <Box>
+    <Box
+      as="main"
+      w="98%"
+      maxW={["container.sm", "container.md", "container.lg"]}
+      mx="auto"
+      p={[4, 6, 8]}
+      bg={colorMode === "light" ? "white" : "gray.800"}
+      borderRadius="md"
+      boxShadow="base"
+    >
       <VStack spacing={4} align="stretch">
         <RadioGroup value={searchType} onChange={setSearchType}>
           <HStack spacing={4}>

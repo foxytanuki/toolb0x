@@ -19,11 +19,7 @@ import {
   zkSync,
   zkSyncSepoliaTestnet,
 } from "viem/chains";
-
-interface ChainSelectorProps {
-  selectedChain: Chain;
-  onChainChange: (chain: Chain) => void;
-}
+import { useChain } from "../contexts/ChainContext";
 
 const chains: Chain[] = [
   mainnet,
@@ -44,15 +40,13 @@ const chains: Chain[] = [
   zkSyncSepoliaTestnet,
 ];
 
-const ChainSelector: React.FC<ChainSelectorProps> = ({
-  selectedChain,
-  onChainChange,
-}) => {
+const ChainSelector = () => {
+  const { chain, setChain } = useChain();
   return (
     <Select
-      value={selectedChain.id}
+      value={chain.id}
       onChange={(e) =>
-        onChainChange(chains.find((c) => c.id === parseInt(e.target.value))!)
+        setChain(chains.find((c) => c.id === parseInt(e.target.value))!)
       }
     >
       {chains.map((chain) => (
