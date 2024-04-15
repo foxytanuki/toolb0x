@@ -1,9 +1,7 @@
-import { useState } from "react";
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { Button, Box, Flex, VStack, useColorMode } from "@chakra-ui/react";
 import Header from "../components/Header";
-import { Chain, mainnet } from "viem/chains";
 import "../index.css";
 
 export const Route = createRootRoute({
@@ -63,7 +61,7 @@ export const Route = createRootRoute({
           </VStack>
         </Flex>
         <hr />
-        <TanStackRouterDevtools />
+        {import.meta.env.DEV && <TanStackRouterDevtools />}
       </>
     );
   },
