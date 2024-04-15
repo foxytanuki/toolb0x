@@ -75,10 +75,15 @@ const FeeHistorySearch = () => {
             {polygonGasStation && (
               <Box>
                 <Box as="h3" fontSize="xl" fontWeight="extrabold">
-                  Polygon Gas Station
+                  Polygon Gas Station (Fast)
                 </Box>
                 <Text>
-                  <strong>Fast:</strong> {polygonGasStation.toString()}Gwei
+                  <strong>MaxPriorityFee:</strong>{" "}
+                  {polygonGasStation.maxPriorityFee.toString()}Gwei
+                </Text>
+                <Text>
+                  <strong>MaxFee:</strong>{" "}
+                  {polygonGasStation.maxFee.toString()}Gwei
                 </Text>
               </Box>
             )}
