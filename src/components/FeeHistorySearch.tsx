@@ -4,6 +4,7 @@ import { usePolygonGasStation } from "../hooks/usePolygonGasStation";
 import { formatGwei } from "viem";
 import LoadingSpinner from "./LoadingSpinner";
 import { useChain } from "../hooks/useChain";
+import { useGasPrice } from "../hooks/useGasPrice";
 
 const FeeHistorySearch = () => {
   const { colorMode } = useColorMode();
@@ -18,7 +19,7 @@ const FeeHistorySearch = () => {
     },
     chain
   );
-
+  const { data: gasPrice, isLoading: gasPriceLoading } = useGasPrice(chain);
   const { data: polygonGasStation, isLoading: polygonGasStationLoading } =
     usePolygonGasStation(chain);
 
@@ -38,28 +39,48 @@ const FeeHistorySearch = () => {
       boxShadow="base"
     >
       <VStack spacing={4} align="stretch">
-        <Text mb="4" fontSize="xl" fontWeight="bold">
+        <Box fontSize="xx-large" fontWeight="bold">
           Gas Fee Calculator
-        </Text>
+        </Box>
         {isLoading && <LoadingSpinner />}
         {error && <Text color="red.500">Error: {error.message}</Text>}
         {feeHistory && (
           <VStack spacing={3} align="stretch">
-            <Text>
-              <strong>BaseFeePerGas:</strong> {formatGwei(baseFeePerGas)}Gwei
-            </Text>
-            <Text>
-              <strong>Rewards:</strong> {formatGwei(priorityFeePerGas)}Gwei
-            </Text>
-            <Text>
-              <strong>Total:</strong> {formatGwei(totalFeePerGas)}Gwei
-            </Text>
+            <Box>
+              <Box as="h3" fontSize="xl" fontWeight="extrabold">
+                eth_feeHistory
+              </Box>
+              <Text>
+                <strong>BaseFeePerGas:</strong> {formatGwei(baseFeePerGas)}Gwei
+              </Text>
+              <Text>
+                <strong>Rewards:</strong> {formatGwei(priorityFeePerGas)}Gwei
+              </Text>
+              <Text>
+                <strong>Total:</strong> {formatGwei(totalFeePerGas)}Gwei
+              </Text>
+            </Box>
+            {gasPriceLoading && <LoadingSpinner />}
+            {gasPrice?.toString && (
+              <Box>
+                <Box as="h3" fontSize="xl" fontWeight="extrabold">
+                  eth_gasPrice
+                </Box>
+                <Text>
+                  <strong>GasPrice:</strong> {formatGwei(gasPrice)}Gwei
+                </Text>
+              </Box>
+            )}
             {polygonGasStationLoading && <LoadingSpinner />}
             {polygonGasStation && (
-              <Text>
-                <strong>Polygon Gas Station (Fast):</strong> {polygonGasStation}
-                Gwei
-              </Text>
+              <Box>
+                <Box as="h3" fontSize="xl" fontWeight="extrabold">
+                  Polygon Gas Station
+                </Box>
+                <Text>
+                  <strong>Fast:</strong> {polygonGasStation.toString()}Gwei
+                </Text>
+              </Box>
             )}
           </VStack>
         )}
