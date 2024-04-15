@@ -40,7 +40,7 @@ const FeeHistorySearch = () => {
     >
       <VStack spacing={4} align="stretch">
         <Box fontSize="xx-large" fontWeight="bold">
-          Gas Fee Calculator
+          Gas Fee Dashboard
         </Box>
         {isLoading && <LoadingSpinner />}
         {error && <Text color="red.500">Error: {error.message}</Text>}
