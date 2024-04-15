@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Flex, Button, useColorMode, VStack } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import BlockSearch from "./components/BlockSearch";
@@ -13,7 +13,16 @@ const queryClient = new QueryClient();
 const App: React.FC = () => {
   const { colorMode } = useColorMode();
   const [selectedMenu, setSelectedMenu] = useState<string>("feeHistorySearch");
-  const [chain, setChain] = useState<Chain>(mainnet);
+  const [chain, setChain] = useState<Chain>(() => {
+    // Load chain state from localStorage
+    const savedChain = localStorage.getItem("selectedChain");
+    return savedChain ? JSON.parse(savedChain) : mainnet;
+  });
+
+  useEffect(() => {
+    // Save chain state to localStorage on change
+    localStorage.setItem("selectedChain", JSON.stringify(chain));
+  }, [chain]);
 
   return (
     <QueryClientProvider client={queryClient}>
