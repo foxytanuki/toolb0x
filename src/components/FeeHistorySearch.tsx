@@ -78,12 +78,19 @@ const FeeHistorySearch = () => {
                   Polygon Gas Station (Fast)
                 </Box>
                 <Text>
+                  <strong>BaseFee:</strong>{" "}
+                  {(
+                    polygonGasStation.maxFee - polygonGasStation.maxPriorityFee
+                  ).toFixed(9)}
+                  Gwei
+                </Text>
+                <Text>
                   <strong>MaxPriorityFee:</strong>{" "}
                   {polygonGasStation.maxPriorityFee.toString()}Gwei
                 </Text>
                 <Text>
-                  <strong>MaxFee:</strong>{" "}
-                  {polygonGasStation.maxFee.toString()}Gwei
+                  <strong>MaxFee:</strong> {polygonGasStation.maxFee.toString()}
+                  Gwei
                 </Text>
               </Box>
             )}
