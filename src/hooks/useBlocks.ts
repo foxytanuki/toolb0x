@@ -52,7 +52,7 @@ export const useBlocks = (
         return [transformBlock(block)];
       } else if (timestamp !== undefined) {
         // Fetch a single block by timestamp
-        const blockNumber = await getBlockNumberFromTimestamp(timestamp);
+        const blockNumber = await getBlockNumberFromTimestamp(chain, timestamp);
         const block = await client.getBlock({ blockNumber });
         return [transformBlock(block)];
       } else if (latestBlockNumber !== undefined) {

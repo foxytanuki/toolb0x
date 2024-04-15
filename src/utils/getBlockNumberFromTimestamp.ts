@@ -1,14 +1,13 @@
-import { createPublicClient, http } from "viem";
-import { mainnet } from "viem/chains";
-
-const client = createPublicClient({
-  chain: mainnet,
-  transport: http(),
-});
+import { Chain, createPublicClient, http } from "viem";
 
 export async function getBlockNumberFromTimestamp(
+  chain: Chain,
   timestamp: number
 ): Promise<bigint> {
+  const client = createPublicClient({
+    chain,
+    transport: http(),
+  });
   const latestBlock = await client.getBlock();
   const latestBlockTimestamp = latestBlock.timestamp;
 
