@@ -11,7 +11,6 @@ const getPolygonGasStation = async (chain: Chain) => {
     const url = "https://gasstation-testnet.polygon.technology/amoy";
     const response = await fetch(url);
     const data = await response.json();
-    console.log(data);
     return data.fast.maxFee;
   }
   return 0;
