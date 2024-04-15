@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, VStack } from "@chakra-ui/react";
 import { useFeeHistory } from "../hooks/useFeeHistory";
+import { usePolygonGasStation } from "../hooks/usePolygonGasStation";
 import { Chain } from "viem/chains";
 import { formatGwei } from "viem";
 import LoadingSpinner from "./LoadingSpinner";
@@ -20,6 +21,9 @@ const FeeHistorySearch: React.FC<FeeHistorySearchProps> = ({ chain }) => {
     },
     chain
   );
+
+  const { data: polygonGasStation, isLoading: polygonGasStationLoading } =
+    usePolygonGasStation(chain);
 
   const baseFeePerGas = feeHistory?.baseFeePerGas ?? 0n;
   const priorityFeePerGas = feeHistory?.rewards[0] ?? 0n;
@@ -43,6 +47,13 @@ const FeeHistorySearch: React.FC<FeeHistorySearchProps> = ({ chain }) => {
           <Text>
             <strong>Total:</strong> {formatGwei(totalFeePerGas)}Gwei
           </Text>
+          {polygonGasStationLoading && <LoadingSpinner />}
+          {polygonGasStation && (
+            <Text>
+              <strong>Polygon Gas Station (Fast):</strong> {polygonGasStation}
+              Gwei
+            </Text>
+          )}
         </VStack>
       )}
     </VStack>
