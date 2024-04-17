@@ -8,7 +8,7 @@ interface PolygonGasStationData {
 
 const getPolygonGasStation = async (chain: Chain) => {
   if (chain.id == polygon.id) {
-    const url = "https://gasstation.polygon.technology/";
+    const url = "https://gasstation.polygon.technology/v2";
     const response = await fetch(url);
     const data = await response.json();
     return data.fast;
