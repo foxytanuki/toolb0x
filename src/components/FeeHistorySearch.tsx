@@ -3,10 +3,12 @@ import {
   Box,
   Text,
   VStack,
+  HStack,
   useColorMode,
   FormControl,
   FormLabel,
   Input,
+  Select,
 } from "@chakra-ui/react";
 import { useFeeHistory } from "../hooks/useFeeHistory";
 import { usePolygonGasStation } from "../hooks/usePolygonGasStation";
@@ -18,6 +20,8 @@ import { useGasPrice } from "../hooks/useGasPrice";
 const FeeHistorySearch = () => {
   const [gasUsage, setGasUsage] = useState<bigint>(5760000n);
   const [fee, setFee] = useState<bigint>(0n);
+  const [gasUsageOption, setGasUsageOption] =
+    useState<string>("contractDeploy");
   const { colorMode } = useColorMode();
   const { chain } = useChain();
   const {
@@ -44,6 +48,26 @@ const FeeHistorySearch = () => {
       setFee(fee);
     }
   }, [gasPrice, gasUsage]);
+
+  useEffect(() => {
+    // gasUsageOptionの変更に応じてgasUsageを更新
+    switch (gasUsageOption) {
+      case "contractDeploy":
+        setGasUsage(5760000n);
+        break;
+      case "mint":
+        setGasUsage(200000n);
+        break;
+      case "setDefaultRoyalty":
+        setGasUsage(30500n);
+        break;
+      case "tokenTransfer":
+        setGasUsage(21000n);
+        break;
+      default:
+        break;
+    }
+  }, [gasUsageOption]);
 
   return (
     <>
@@ -126,15 +150,33 @@ const FeeHistorySearch = () => {
           <Box>
             <FormControl>
               <FormLabel htmlFor="gasUsage">Gas Usage</FormLabel>
-              <Input
-                id="gasUsage"
-                type="number"
-                value={gasUsage.toString()}
-                onChange={(e) => setGasUsage(BigInt(e.target.value))}
-              />
+              <HStack>
+                <Select
+                  id="gasUsageOption"
+                  value={gasUsageOption}
+                  onChange={(e) => setGasUsageOption(e.target.value)}
+                >
+                  <option value="contractDeploy">
+                    Contract Deploy - 5,760,000
+                  </option>
+                  <option value="mint">Mint - 200,000</option>
+                  <option value="setDefaultRoyalty">
+                    Set Default Royalty - 30,500
+                  </option>
+                  <option value="tokenTransfer">Token Transfer - 21,000</option>
+                </Select>
+                <Input
+                  id="gasUsage"
+                  type="number"
+                  value={gasUsage.toString()}
+                  onChange={(e) => setGasUsage(BigInt(e.target.value))}
+                />
+              </HStack>
             </FormControl>
             {fee !== null && (
-              <Text mt={4}>Transaction Fee: {formatGwei(fee)} MATIC</Text>
+              <Text mt={4}>
+                Transaction Fee: {formatGwei(fee)} {chain.nativeCurrency.symbol}
+              </Text>
             )}
           </Box>
         </VStack>
