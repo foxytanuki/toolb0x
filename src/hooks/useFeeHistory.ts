@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createPublicClient, http } from "viem";
 import { Chain } from "viem/chains";
 import { useBlock } from "./useBlock";
+import { useRefetch } from "./useRefetch";
 
 interface FeeHistoryData {
   baseFeePerGas: bigint;
@@ -24,6 +25,7 @@ export const useFeeHistory = (
   });
 
   const { block } = useBlock();
+  const { refetchInterval } = useRefetch();
 
   return useQuery<FeeHistoryData, Error>({
     queryKey: ["feeHistory", chain.id, blockCount],
@@ -46,6 +48,7 @@ export const useFeeHistory = (
         throw new Error("block is undefined");
       }
     },
+    refetchInterval,
     enabled: block !== undefined,
   });
 };

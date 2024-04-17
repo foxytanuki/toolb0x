@@ -1,10 +1,18 @@
 import { useEffect } from "react";
-import { Box, IconButton, useColorMode, Text } from "@chakra-ui/react";
-import { SunIcon, MoonIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  IconButton,
+  useColorMode,
+  Text,
+  Button,
+  Tooltip,
+} from "@chakra-ui/react";
+import { SunIcon, MoonIcon, TimeIcon } from "@chakra-ui/icons";
 import ChainSelector from "./ChainSelector";
 import { useBlock } from "../hooks/useBlock";
 import { useChain } from "../hooks/useChain";
 import { createPublicClient, http } from "viem";
+import { useRefetch } from "../hooks/useRefetch";
 
 export default function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -14,15 +22,16 @@ export default function Header() {
     chain,
     transport: http(),
   });
+  const { refetchInterval, setRefetchInterval } = useRefetch();
 
   useEffect(() => {
     const fetchLatestBlockNumber = async () => {
       const blockNumber = await client.getBlockNumber();
       setBlock(blockNumber);
     };
-
-    fetchLatestBlockNumber();
-  }, [chain, client, setBlock]);
+    const intervalId = setInterval(fetchLatestBlockNumber, refetchInterval);
+    return () => clearInterval(intervalId);
+  }, [chain, client, setBlock, refetchInterval]);
 
   return (
     <Box
@@ -41,6 +50,21 @@ export default function Header() {
         <Box display="flex" justifyContent="end" ml={4} mr={4}>
           <Box mr={4}>
             <ChainSelector />
+          </Box>
+          <Box mr={4}>
+            <Tooltip label="Change refetch interval">
+              <Button
+                aria-label="Change refetch interval"
+                onClick={() =>
+                  setRefetchInterval(refetchInterval === 3000 ? 1000 : 3000)
+                }
+                leftIcon={<TimeIcon />}
+                variant="ghost"
+                color="white"
+              >
+                {refetchInterval === 3000 ? "3s" : "1s"}
+              </Button>
+            </Tooltip>
           </Box>
           <IconButton
             aria-label="Toggle color mode"

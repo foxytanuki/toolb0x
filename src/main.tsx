@@ -8,6 +8,7 @@ import { routeTree } from "./routeTree.gen";
 import { ChainProvider } from "./contexts/ChainContext";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { BlockProvider } from "./contexts/BlockContext";
+import { RefetchProvider } from "./contexts/RefetchContext";
 
 // Create a new router instance
 const router = createRouter({ routeTree });
@@ -30,7 +31,9 @@ if (!rootElement.innerHTML) {
         <ChainProvider>
           <BlockProvider>
             <QueryClientProvider client={queryClient}>
-              <RouterProvider router={router} />
+              <RefetchProvider>
+                <RouterProvider router={router} />
+              </RefetchProvider>
             </QueryClientProvider>
           </BlockProvider>
         </ChainProvider>

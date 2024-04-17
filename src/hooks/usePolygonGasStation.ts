@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Chain, polygon, polygonAmoy } from "viem/chains";
+import { useRefetch } from "./useRefetch";
 
 interface PolygonGasStationData {
   maxPriorityFee: number;
@@ -22,11 +23,13 @@ const getPolygonGasStation = async (chain: Chain) => {
 };
 
 export const usePolygonGasStation = (chain: Chain) => {
+  const { refetchInterval } = useRefetch();
   return useQuery<PolygonGasStationData, Error>({
     queryKey: [chain],
     queryFn: async () => {
       const gas = await getPolygonGasStation(chain);
       return gas;
     },
+    refetchInterval,
   });
 };
