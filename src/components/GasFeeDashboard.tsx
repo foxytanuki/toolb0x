@@ -17,7 +17,7 @@ import LoadingSpinner from "./LoadingSpinner";
 import { useChain } from "../hooks/useChain";
 import { useGasPrice } from "../hooks/useGasPrice";
 
-const FeeHistorySearch = () => {
+const GasFeeDashboard = () => {
   const [gasUsage, setGasUsage] = useState<bigint>(5760000n);
   const [fee, setFee] = useState<bigint>(0n);
   const [gasUsageOption, setGasUsageOption] =
@@ -185,4 +185,4 @@ const FeeHistorySearch = () => {
   );
 };
 
-export default FeeHistorySearch;
+export default GasFeeDashboard;
