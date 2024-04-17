@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Block, createPublicClient, http } from "viem";
 import { Chain } from "viem/chains";
 import { getBlockNumberFromTimestamp } from "../utils/getBlockNumberFromTimestamp";
+import { useBlock } from "./useBlock";
 
 export interface BlockData {
   number: bigint;
@@ -32,19 +32,17 @@ export const useBlocks = (
     transport: http(),
   });
 
-  const [latestBlockNumber, setLatestBlockNumber] = useState<bigint>();
-
-  useEffect(() => {
-    const fetchLatestBlockNumber = async () => {
-      const blockNumber = await client.getBlockNumber();
-      setLatestBlockNumber(blockNumber);
-    };
-
-    fetchLatestBlockNumber();
-  }, [chain, client]);
+  const { block } = useBlock();
 
   return useQuery<BlockData[]>({
-    queryKey: ["blocks", chain.id, blockNumber?.toString(), timestamp, limit],
+    queryKey: [
+      "blocks",
+      chain.id,
+      blockNumber?.toString(),
+      timestamp,
+      limit,
+      block.toString(),
+    ],
     queryFn: async () => {
       if (blockNumber !== undefined) {
         // Fetch a single block by block number
@@ -55,30 +53,14 @@ export const useBlocks = (
         const blockNumber = await getBlockNumberFromTimestamp(chain, timestamp);
         const block = await client.getBlock({ blockNumber });
         return [transformBlock(block)];
-      } else if (latestBlockNumber !== undefined) {
-        // Fetch a list of blocks with pagination
-        const offset = limit;
-        const startBlockNumber = BigInt(
-          Math.max(Number(latestBlockNumber) - offset - limit + 1, 0)
-        );
-        const endBlockNumber = BigInt(
-          Math.max(Number(latestBlockNumber) - offset, 0)
-        );
-
-        const blockNumbers = Array.from(
-          { length: Number(endBlockNumber - startBlockNumber) + 1 },
-          (_, i) => BigInt(Number(startBlockNumber) + i)
-        );
-
-        const blocks = await Promise.all(
-          blockNumbers.map((blockNumber) => client.getBlock({ blockNumber }))
-        );
-        return blocks.map(transformBlock).reverse();
+      } else if (block > -1) {
+        const latestBlock = await client.getBlock({ blockNumber: block });
+        return [transformBlock(latestBlock)];
       } else {
         return [];
       }
     },
-    enabled: latestBlockNumber !== undefined,
+    enabled: block > -1,
   });
 };
 

@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { createPublicClient, http } from "viem";
 import { Chain } from "viem/chains";
+import { useBlock } from "./useBlock";
 
 interface FeeHistoryData {
   baseFeePerGas: bigint;
@@ -23,21 +23,12 @@ export const useFeeHistory = (
     transport: http(),
   });
 
-  const [latestBlockNumber, setLatestBlockNumber] = useState<bigint>();
-
-  useEffect(() => {
-    const fetchLatestBlockNumber = async () => {
-      const blockNumber = await client.getBlockNumber();
-      setLatestBlockNumber(blockNumber);
-    };
-
-    fetchLatestBlockNumber();
-  }, [chain, client]);
+  const { block } = useBlock();
 
   return useQuery<FeeHistoryData, Error>({
     queryKey: ["feeHistory", chain.id, blockCount],
     queryFn: async () => {
-      if (latestBlockNumber !== undefined) {
+      if (block !== undefined) {
         const rewardPercentiles = [75];
         const { baseFeePerGas, gasUsedRatio, oldestBlock, reward } =
           await client.getFeeHistory({
@@ -52,9 +43,9 @@ export const useFeeHistory = (
         };
         return feeHistory;
       } else {
-        throw new Error("latestBlockNumber is undefined");
+        throw new Error("block is undefined");
       }
     },
-    enabled: latestBlockNumber !== undefined,
+    enabled: block !== undefined,
   });
 };

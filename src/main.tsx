@@ -7,6 +7,7 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import { ChainProvider } from "./contexts/ChainContext";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { BlockProvider } from "./contexts/BlockContext";
 
 // Create a new router instance
 const router = createRouter({ routeTree });
@@ -27,9 +28,11 @@ if (!rootElement.innerHTML) {
     <StrictMode>
       <ChakraProvider theme={theme}>
         <ChainProvider>
-          <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router} />
-          </QueryClientProvider>
+          <BlockProvider>
+            <QueryClientProvider client={queryClient}>
+              <RouterProvider router={router} />
+            </QueryClientProvider>
+          </BlockProvider>
         </ChainProvider>
       </ChakraProvider>
     </StrictMode>
