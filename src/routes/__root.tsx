@@ -1,7 +1,8 @@
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import { Button, Box, Flex, VStack, useColorMode } from "@chakra-ui/react";
+import { Flex, VStack, useColorMode } from "@chakra-ui/react";
 import Header from "../components/Header";
+import SideBar from "../components/SideBar";
 import "../index.css";
 
 export const Route = createRootRoute({
@@ -14,47 +15,7 @@ export const Route = createRootRoute({
           minHeight="100vh"
           bg={colorMode === "light" ? "gray.100" : "gray.900"}
         >
-          <Box
-            width="250px"
-            bg={colorMode === "light" ? "white" : "gray.800"}
-            p={4}
-          >
-            <Link to="/" width="100%">
-              <Box
-                as="h1"
-                fontSize={["2xl", "3xl", "4xl"]}
-                fontWeight="extrabold"
-                color={colorMode === "light" ? "gray.600" : "gray.200"}
-                textAlign="center"
-                mt={3}
-                mb={6}
-              >
-                Toolb0x
-              </Box>
-            </Link>
-            <Link to="/fee" className="[&.active]:font-bold" width="100%">
-              <Button
-                mb={4}
-                width="100%"
-                colorScheme="blue"
-                variant="outline"
-                size="md"
-              >
-                GasFee
-              </Button>
-            </Link>
-            <Link to="/blocks" className="[&.active]:font-bold" width="100%">
-              <Button
-                mb={4}
-                width="100%"
-                colorScheme="blue"
-                variant="outline"
-                size="md"
-              >
-                BlockSearch
-              </Button>
-            </Link>
-          </Box>
+          <SideBar />
           <VStack w="full">
             <Header />
             <Outlet />
