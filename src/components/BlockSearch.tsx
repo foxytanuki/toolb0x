@@ -46,15 +46,7 @@ const BlockSearch = () => {
 
   const handleSearch = async () => {
     setIsLoading(true);
-    if (searchType === "blockNumber") {
-      if (blockNumber <= 0n) {
-        setBlockNumberError("Block number must be a positive integer.");
-        return setIsLoading(false);
-      }
-      const block = await client.getBlock({ blockNumber });
-      setBlock(block);
-      return setIsLoading(false);
-    } else {
+    if (searchType === "timestamp") {
       if (dateTime && timestampType === "datetime") {
         const timestamp = Math.floor(new Date(dateTime).getTime() / 1000);
         if (isNaN(timestamp)) {
@@ -68,6 +60,14 @@ const BlockSearch = () => {
         setBlock(block);
         return setIsLoading(false);
       }
+    } else {
+      if (blockNumber <= 0n) {
+        setBlockNumberError("Block number must be a positive integer.");
+        return setIsLoading(false);
+      }
+      const block = await client.getBlock({ blockNumber });
+      setBlock(block);
+      return setIsLoading(false);
     }
   };
 
@@ -89,23 +89,7 @@ const BlockSearch = () => {
             <Radio value="blockNumber">Block Number</Radio>
           </HStack>
         </RadioGroup>
-        {searchType === "blockNumber" ? (
-          <FormControl isInvalid={!!blockNumberError}>
-            <FormLabel>Block Number</FormLabel>
-            <NumberInput
-              value={blockNumber.toString()}
-              onChange={(valueString) => setBlockNumber(BigInt(valueString))}
-              size="sm"
-            >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-            <FormErrorMessage>{blockNumberError}</FormErrorMessage>
-          </FormControl>
-        ) : (
+        {searchType === "timestamp" ? (
           <FormControl isInvalid={!!timestampError}>
             <FormLabel>Timestamp</FormLabel>
             <RadioGroup value={timestampType} onChange={setTimestampType}>
@@ -130,6 +114,22 @@ const BlockSearch = () => {
               <DateTimePicker value={dateTime} onChange={setDateTime} />
             )}
             <FormErrorMessage>{timestampError}</FormErrorMessage>
+          </FormControl>
+        ) : (
+          <FormControl isInvalid={!!blockNumberError}>
+            <FormLabel>Block Number</FormLabel>
+            <NumberInput
+              value={blockNumber.toString()}
+              onChange={(valueString) => setBlockNumber(BigInt(valueString))}
+              size="sm"
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+            <FormErrorMessage>{blockNumberError}</FormErrorMessage>
           </FormControl>
         )}
         <Button
