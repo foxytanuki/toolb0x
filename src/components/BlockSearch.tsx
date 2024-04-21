@@ -4,7 +4,11 @@ import {
   Button,
   FormControl,
   FormLabel,
-  Input,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
   VStack,
   FormErrorMessage,
   HStack,
@@ -12,23 +16,26 @@ import {
   Radio,
   useColorMode,
 } from "@chakra-ui/react";
-import { useBlocks } from "../hooks/useBlocks";
 import { useChain } from "../hooks/useChain";
 import BlockInfo from "./BlockInfo";
 import ErrorMessage from "./ErrorMessage";
 import LoadingSpinner from "./LoadingSpinner";
 import DateTimePicker from "./DateTimePicker";
-import { createPublicClient, http } from "viem";
+import { getBlockNumberFromTimestamp } from "../utils/getBlockNumberFromTimestamp";
+import { createPublicClient, http, Block } from "viem";
 
 const BlockSearch = () => {
   const { colorMode } = useColorMode();
   const { chain } = useChain();
-  const [blockNumber, setBlockNumber] = useState<string>("");
-  const [timestamp, setTimestamp] = useState<string>("");
+  const [blockNumber, setBlockNumber] = useState<bigint>(0n);
+  const [block, setBlock] = useState<Block | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [timestamp, setTimestamp] = useState<string>(
+    Math.floor(new Date().getTime() / 1000).toString()
+  );
   const [blockNumberError, setBlockNumberError] = useState<string>("");
   const [timestampError, setTimestampError] = useState<string>("");
   const [dateTime, setDateTime] = useState("");
-  const [pageSize] = useState(1);
   const [timestampType, setTimestampType] = useState("unix");
   const [searchType, setSearchType] = useState("timestamp");
 
@@ -37,39 +44,31 @@ const BlockSearch = () => {
     transport: http(),
   });
 
-  const {
-    data: blocks = [],
-    isLoading,
-    error,
-    refetch,
-  } = useBlocks(
-    {
-      blockNumber: blockNumber ? BigInt(blockNumber) : undefined,
-      timestamp: timestamp ? parseInt(timestamp, 10) : undefined,
-      limit: pageSize,
-    },
-    chain
-  );
-
-  const handleSearch = () => {
+  const handleSearch = async () => {
+    setIsLoading(true);
     if (searchType === "blockNumber") {
-      if (blockNumber && !/^\d+$/.test(blockNumber)) {
+      if (blockNumber <= 0n) {
         setBlockNumberError("Block number must be a positive integer.");
-        return;
+        return setIsLoading(false);
       }
-      setBlockNumberError("");
+      const block = await client.getBlock({ blockNumber });
+      setBlock(block);
+      return setIsLoading(false);
     } else {
-      if (dateTime) {
+      if (dateTime && timestampType === "datetime") {
         const timestamp = Math.floor(new Date(dateTime).getTime() / 1000);
         if (isNaN(timestamp)) {
           setTimestampError("Invalid UTC date and time.");
-          return;
+          return setIsLoading(false);
         }
         setTimestamp(timestamp.toString());
+        const blockNumber = await getBlockNumberFromTimestamp(chain, timestamp);
+        const block = await client.getBlock({ blockNumber });
+        setBlockNumber(blockNumber);
+        setBlock(block);
+        return setIsLoading(false);
       }
-      setTimestampError("");
     }
-    refetch();
   };
 
   return (
@@ -93,13 +92,17 @@ const BlockSearch = () => {
         {searchType === "blockNumber" ? (
           <FormControl isInvalid={!!blockNumberError}>
             <FormLabel>Block Number</FormLabel>
-            <Input
-              type="number"
-              value={blockNumber}
-              onChange={(e) => setBlockNumber(e.target.value)}
-              placeholder="Enter block number"
+            <NumberInput
+              value={blockNumber.toString()}
+              onChange={(valueString) => setBlockNumber(BigInt(valueString))}
               size="sm"
-            />
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
             <FormErrorMessage>{blockNumberError}</FormErrorMessage>
           </FormControl>
         ) : (
@@ -112,13 +115,17 @@ const BlockSearch = () => {
               </HStack>
             </RadioGroup>
             {timestampType === "unix" ? (
-              <Input
-                type="number"
+              <NumberInput
                 value={timestamp}
-                onChange={(e) => setTimestamp(e.target.value)}
-                placeholder="Enter timestamp"
+                onChange={(valueString) => setTimestamp(valueString)}
                 size="sm"
-              />
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
             ) : (
               <DateTimePicker value={dateTime} onChange={setDateTime} />
             )}
@@ -135,12 +142,15 @@ const BlockSearch = () => {
         </Button>
       </VStack>
       {isLoading && <LoadingSpinner />}
-      {error && <ErrorMessage message="Failed to fetch block data." />}
-      {blocks.map((block) => (
-        <Box key={block.number.toString()} mt={8}>
-          <BlockInfo block={block} chain={chain} client={client} />
+      {timestampError && <ErrorMessage message="Failed to fetch block data." />}
+      {blockNumberError && (
+        <ErrorMessage message="Failed to fetch block data." />
+      )}
+      {!isLoading && block && !blockNumberError && !timestampError && (
+        <Box key={blockNumber.toString()} mt={8}>
+          {block && <BlockInfo block={block} chain={chain} client={client} />}
         </Box>
-      ))}
+      )}
     </Box>
   );
 };

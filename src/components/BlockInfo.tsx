@@ -1,12 +1,11 @@
 import React from "react";
 import { Box, Heading, Text, VStack, HStack, Link } from "@chakra-ui/react";
 // import TransactionGasStats from "./TransactionGasStats";
-import TransactionList from "./TransactionList";
-import { BlockData } from "../hooks/useBlocks";
-import { Chain, PublicClient } from "viem";
+// import TransactionList from "./TransactionList";
+import { Chain, PublicClient, Block } from "viem";
 
 interface BlockInfoProps {
-  block: BlockData;
+  block: Block;
   chain: Chain;
   client: PublicClient;
 }
@@ -21,10 +20,10 @@ const BlockInfo: React.FC<BlockInfoProps> = ({ block, chain, client }) => {
         <Heading as="h2" fontFamily="Jersey 25">
           Block:{" "}
           <Link
-            href={`${explorerUrl}/block/${block.number.toString()}`}
+            href={`${explorerUrl}/block/${block.number?.toString()}`}
             isExternal
           >
-            {block.number.toString()}
+            {block.number?.toString()}
           </Link>
         </Heading>
         <Text>
@@ -32,7 +31,7 @@ const BlockInfo: React.FC<BlockInfoProps> = ({ block, chain, client }) => {
           {new Date(Number(block.timestamp) * 1000).toLocaleString()}
         </Text>
         <Text>
-          <strong>Transaction Count:</strong> {block.txCount}
+          <strong>Transaction Count:</strong> {block.transactions.length}
         </Text>
         <Text>
           <strong>Gas Used:</strong> {block.gasUsed.toString()}
@@ -60,7 +59,7 @@ const BlockInfo: React.FC<BlockInfoProps> = ({ block, chain, client }) => {
           )}
         </Text>
         {/* <TransactionGasStats client={client} blockNumber={block.number} /> */}
-        <TransactionList transactions={block.transactions} chain={chain} />
+        {/* <TransactionList transactions={block.transactions} chain={chain} /> */}
 
         <HStack>
           <Box>
