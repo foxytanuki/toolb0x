@@ -36,7 +36,7 @@ const BlockSearch = () => {
   const [blockNumberError, setBlockNumberError] = useState<string>("");
   const [timestampError, setTimestampError] = useState<string>("");
   const [dateTime, setDateTime] = useState("");
-  const [timestampType, setTimestampType] = useState("unix");
+  const [timestampType, setTimestampType] = useState("datetime");
   const [searchType, setSearchType] = useState("timestamp");
 
   const client = createPublicClient({
@@ -94,8 +94,8 @@ const BlockSearch = () => {
             <FormLabel>Timestamp</FormLabel>
             <RadioGroup value={timestampType} onChange={setTimestampType}>
               <HStack spacing={4}>
-                <Radio value="unix">Unix Time</Radio>
                 <Radio value="datetime">Date & Time</Radio>
+                {/* <Radio value="unix">Unix Time</Radio> */}
               </HStack>
             </RadioGroup>
             {timestampType === "unix" ? (
