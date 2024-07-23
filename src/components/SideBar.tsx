@@ -44,6 +44,17 @@ export default function SideBar() {
           BlockSearch
         </Button>
       </Link>
+      <Link to="/address" className="[&.active]:font-bold" width="100%">
+        <Button
+          mb={4}
+          width="100%"
+          colorScheme="blue"
+          variant="outline"
+          size="md"
+        >
+          Address Generator
+        </Button>
+      </Link>
     </Box>
   );
 }
