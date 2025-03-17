@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Input, Button, HStack } from "@chakra-ui/react";
+import { Input, Button, HStack, Text } from "@chakra-ui/react";
 import { Box, VStack, Heading } from "@chakra-ui/react";
 import { useColorMode } from "@chakra-ui/react";
 import { generateAddresses } from "../utils/getAddress";
@@ -62,7 +62,7 @@ const AddressGenerator: React.FC = () => {
           <VStack>
             <Heading size="lg">Addresses</Heading>
             {addresses.map((address) => (
-              <p key={address}>{address}</p>
+              <Text key={address}>{address}</Text>
             ))}
           </VStack>
         </VStack>
