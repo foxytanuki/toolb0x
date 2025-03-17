@@ -1,22 +1,16 @@
 import { Select } from "@chakra-ui/react";
 import {
-  Chain,
+  type Chain,
   mainnet,
   sepolia,
   polygon,
   polygonAmoy,
-  blast,
-  blastSepolia,
   base,
   baseSepolia,
-  manta,
-  mantaTestnet,
   optimism,
   optimismSepolia,
   arbitrum,
   arbitrumSepolia,
-  zkSync,
-  zkSyncSepoliaTestnet,
 } from "viem/chains";
 import { useChain } from "../hooks/useChain";
 
@@ -25,18 +19,12 @@ const chains: Chain[] = [
   sepolia,
   polygon,
   polygonAmoy,
-  blast,
-  blastSepolia,
   base,
   baseSepolia,
-  manta,
-  mantaTestnet,
   optimism,
   optimismSepolia,
   arbitrum,
   arbitrumSepolia,
-  zkSync,
-  zkSyncSepoliaTestnet,
 ];
 
 const ChainSelector = () => {
