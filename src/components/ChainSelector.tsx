@@ -3,8 +3,6 @@ import {
   type Chain,
   mainnet,
   sepolia,
-  polygon,
-  polygonAmoy,
   base,
   baseSepolia,
   optimism,
@@ -17,8 +15,6 @@ import { useChain } from "../hooks/useChain";
 const chains: Chain[] = [
   mainnet,
   sepolia,
-  polygon,
-  polygonAmoy,
   base,
   baseSepolia,
   optimism,
