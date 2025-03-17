@@ -1,8 +1,5 @@
-import React from "react";
 import { Box, Heading, Text, VStack, HStack, Link } from "@chakra-ui/react";
-// import TransactionGasStats from "./TransactionGasStats";
-// import TransactionList from "./TransactionList";
-import { Chain, PublicClient, Block } from "viem";
+import type { Chain, PublicClient, Block } from "viem";
 
 interface BlockInfoProps {
   block: Block;

@@ -1,8 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
-import { Block, createPublicClient, http } from "viem";
-import { Chain } from "viem/chains";
-import { getBlockNumberFromTimestamp } from "../utils/getBlockNumberFromTimestamp";
-import { useBlock } from "./useBlock";
+import { useQuery } from '@tanstack/react-query';
+import { Block, createPublicClient, http } from 'viem';
+import { Chain } from 'viem/chains';
+import { getBlockNumberFromTimestamp } from '../utils/getBlockNumberFromTimestamp';
+import { useBlock } from './useBlock';
 
 export interface BlockData {
   number: bigint;
@@ -35,14 +35,7 @@ export const useBlocks = (
   const { block } = useBlock();
 
   return useQuery<BlockData[]>({
-    queryKey: [
-      "blocks",
-      chain.id,
-      blockNumber?.toString(),
-      timestamp,
-      limit,
-      block.toString(),
-    ],
+    queryKey: ['blocks', chain.id, blockNumber?.toString(), timestamp, limit, block.toString()],
     queryFn: async () => {
       if (blockNumber !== undefined) {
         // Fetch a single block by block number

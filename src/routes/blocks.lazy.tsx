@@ -1,6 +1,6 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
-import BlockSearch from "../components/BlockSearch";
+import { createLazyFileRoute } from '@tanstack/react-router';
+import BlockSearch from '../components/BlockSearch';
 
-export const Route = createLazyFileRoute("/blocks")({
+export const Route = createLazyFileRoute('/blocks')({
   component: () => <BlockSearch />,
 });

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -15,14 +15,14 @@ import {
   RadioGroup,
   Radio,
   useColorMode,
-} from "@chakra-ui/react";
-import { useChain } from "../hooks/useChain";
-import BlockInfo from "./BlockInfo";
-import ErrorMessage from "./ErrorMessage";
-import LoadingSpinner from "./LoadingSpinner";
-import DateTimePicker from "./DateTimePicker";
-import { getBlockNumberFromTimestamp } from "../utils/getBlockNumberFromTimestamp";
-import { createPublicClient, http, Block } from "viem";
+} from '@chakra-ui/react';
+import { useChain } from '../hooks/useChain';
+import BlockInfo from './BlockInfo';
+import ErrorMessage from './ErrorMessage';
+import LoadingSpinner from './LoadingSpinner';
+import DateTimePicker from './DateTimePicker';
+import { getBlockNumberFromTimestamp } from '../utils/getBlockNumberFromTimestamp';
+import { createPublicClient, http, Block } from 'viem';
 
 const BlockSearch = () => {
   const { colorMode } = useColorMode();
@@ -33,11 +33,11 @@ const BlockSearch = () => {
   const [timestamp, setTimestamp] = useState<string>(
     Math.floor(new Date().getTime() / 1000).toString()
   );
-  const [blockNumberError, setBlockNumberError] = useState<string>("");
-  const [timestampError, setTimestampError] = useState<string>("");
-  const [dateTime, setDateTime] = useState("");
-  const [timestampType, setTimestampType] = useState("datetime");
-  const [searchType, setSearchType] = useState("timestamp");
+  const [blockNumberError, setBlockNumberError] = useState<string>('');
+  const [timestampError, setTimestampError] = useState<string>('');
+  const [dateTime, setDateTime] = useState('');
+  const [timestampType, setTimestampType] = useState('datetime');
+  const [searchType, setSearchType] = useState('timestamp');
 
   const client = createPublicClient({
     chain,
@@ -46,11 +46,11 @@ const BlockSearch = () => {
 
   const handleSearch = async () => {
     setIsLoading(true);
-    if (searchType === "timestamp") {
-      if (dateTime && timestampType === "datetime") {
+    if (searchType === 'timestamp') {
+      if (dateTime && timestampType === 'datetime') {
         const timestamp = Math.floor(new Date(dateTime).getTime() / 1000);
         if (isNaN(timestamp)) {
-          setTimestampError("Invalid UTC date and time.");
+          setTimestampError('Invalid UTC date and time.');
           return setIsLoading(false);
         }
         setTimestamp(timestamp.toString());
@@ -62,7 +62,7 @@ const BlockSearch = () => {
       }
     } else {
       if (blockNumber <= 0n) {
-        setBlockNumberError("Block number must be a positive integer.");
+        setBlockNumberError('Block number must be a positive integer.');
         return setIsLoading(false);
       }
       const block = await client.getBlock({ blockNumber });
@@ -75,10 +75,10 @@ const BlockSearch = () => {
     <Box
       as="main"
       w="98%"
-      maxW={["container.sm", "container.md", "container.lg"]}
+      maxW={['container.sm', 'container.md', 'container.lg']}
       mx="auto"
       p={[4, 6, 8]}
-      bg={colorMode === "light" ? "white" : "gray.800"}
+      bg={colorMode === 'light' ? 'white' : 'gray.800'}
       borderRadius="md"
       boxShadow="base"
     >
@@ -89,7 +89,7 @@ const BlockSearch = () => {
             <Radio value="blockNumber">Block Number</Radio>
           </HStack>
         </RadioGroup>
-        {searchType === "timestamp" ? (
+        {searchType === 'timestamp' ? (
           <FormControl isInvalid={!!timestampError}>
             <FormLabel>Timestamp</FormLabel>
             <RadioGroup value={timestampType} onChange={setTimestampType}>
@@ -98,7 +98,7 @@ const BlockSearch = () => {
                 {/* <Radio value="unix">Unix Time</Radio> */}
               </HStack>
             </RadioGroup>
-            {timestampType === "unix" ? (
+            {timestampType === 'unix' ? (
               <NumberInput
                 value={timestamp}
                 onChange={(valueString) => setTimestamp(valueString)}
@@ -132,20 +132,13 @@ const BlockSearch = () => {
             <FormErrorMessage>{blockNumberError}</FormErrorMessage>
           </FormControl>
         )}
-        <Button
-          onClick={handleSearch}
-          colorScheme="blue"
-          size="sm"
-          alignSelf="flex-end"
-        >
+        <Button onClick={handleSearch} colorScheme="blue" size="sm" alignSelf="flex-end">
           Search
         </Button>
       </VStack>
       {isLoading && <LoadingSpinner />}
       {timestampError && <ErrorMessage message="Failed to fetch block data." />}
-      {blockNumberError && (
-        <ErrorMessage message="Failed to fetch block data." />
-      )}
+      {blockNumberError && <ErrorMessage message="Failed to fetch block data." />}
       {!isLoading && block && !blockNumberError && !timestampError && (
         <Box key={blockNumber.toString()} mt={8}>
           {block && <BlockInfo block={block} chain={chain} client={client} />}

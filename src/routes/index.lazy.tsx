@@ -1,7 +1,7 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
-import FeeHistorySearch from "../components/GasFeeDashboard";
+import { createLazyFileRoute } from '@tanstack/react-router';
+import FeeHistorySearch from '../components/GasFeeDashboard';
 
-export const Route = createLazyFileRoute("/")({
+export const Route = createLazyFileRoute('/')({
   component: Index,
 });
 

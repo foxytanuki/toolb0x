@@ -32,9 +32,12 @@ const ChainSelector = () => {
   return (
     <Select
       value={chain.id}
-      onChange={(e) =>
-        setChain(chains.find((c) => c.id === parseInt(e.target.value))!)
-      }
+      onChange={(e) => {
+        const selectedChain = chains.find(
+          (c) => c.id === Number.parseInt(e.target.value)
+        );
+        if (selectedChain) setChain(selectedChain);
+      }}
     >
       {chains.map((chain) => (
         <option key={chain.id} value={chain.id}>

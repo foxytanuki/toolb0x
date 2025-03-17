@@ -1,18 +1,16 @@
-import { createContext, useState, ReactNode, useEffect } from "react";
-import { Chain, mainnet } from "viem/chains";
+import { createContext, useState, ReactNode, useEffect } from 'react';
+import { Chain, mainnet } from 'viem/chains';
 
 interface ChainContextType {
   chain: Chain;
   setChain: (chain: Chain) => void;
 }
 
-export const ChainContext = createContext<ChainContextType | undefined>(
-  undefined
-);
+export const ChainContext = createContext<ChainContextType | undefined>(undefined);
 
 export const ChainProvider = ({ children }: { children: ReactNode }) => {
   const [chain, setChain] = useState<Chain>(() => {
-    const chain = localStorage.getItem("chain");
+    const chain = localStorage.getItem('chain');
     if (chain) {
       return JSON.parse(chain);
     }
@@ -20,12 +18,8 @@ export const ChainProvider = ({ children }: { children: ReactNode }) => {
   });
 
   useEffect(() => {
-    localStorage.setItem("chain", JSON.stringify(chain));
+    localStorage.setItem('chain', JSON.stringify(chain));
   }, [chain]);
 
-  return (
-    <ChainContext.Provider value={{ chain, setChain }}>
-      {children}
-    </ChainContext.Provider>
-  );
+  return <ChainContext.Provider value={{ chain, setChain }}>{children}</ChainContext.Provider>;
 };
