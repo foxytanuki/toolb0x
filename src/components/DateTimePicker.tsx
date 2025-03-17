@@ -1,5 +1,5 @@
-import React from 'react';
-import { FormControl, Input } from '@chakra-ui/react';
+import type React from "react";
+import { FormControl, Input } from "@chakra-ui/react";
 
 interface DateTimePickerProps {
   value: string;

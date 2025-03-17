@@ -1,6 +1,6 @@
-import React from 'react';
-import { Spinner, Flex } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
+import type React from "react";
+import { Spinner, Flex } from "@chakra-ui/react";
+import { motion } from "framer-motion";
 
 const MotionFlex = motion(Flex);
 

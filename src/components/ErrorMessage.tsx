@@ -1,6 +1,12 @@
-import React from 'react';
-import { Alert, AlertIcon, AlertTitle, AlertDescription, Box } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
+import type React from "react";
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Box,
+} from "@chakra-ui/react";
+import { motion } from "framer-motion";
 
 const MotionAlert = motion(Alert);
 
@@ -10,7 +16,11 @@ interface ErrorMessageProps {
   details?: string;
 }
 
-const ErrorMessage: React.FC<ErrorMessageProps> = ({ title = 'Error!', message, details }) => {
+const ErrorMessage: React.FC<ErrorMessageProps> = ({
+  title = "Error!",
+  message,
+  details,
+}) => {
   return (
     <MotionAlert
       status="error"

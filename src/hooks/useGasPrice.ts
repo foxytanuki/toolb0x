@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
-import { createPublicClient, http } from 'viem';
-import { Chain } from 'viem/chains';
-import { useBlock } from './useBlock';
-import { useRefetch } from './useRefetch';
+import { useQuery } from "@tanstack/react-query";
+import { createPublicClient, http } from "viem";
+import type { Chain } from "viem/chains";
+import { useBlock } from "./useBlock";
+import { useRefetch } from "./useRefetch";
 
 export const useGasPrice = (chain: Chain) => {
   const client = createPublicClient({
@@ -14,14 +14,13 @@ export const useGasPrice = (chain: Chain) => {
   const { refetchInterval } = useRefetch();
 
   return useQuery<bigint, Error>({
-    queryKey: ['gasPrice', chain.id],
+    queryKey: ["gasPrice", chain.id],
     queryFn: async () => {
-      if (block > -1n) {
-        const gasPrice = await client.getGasPrice();
-        return gasPrice;
-      } else {
+      if (block <= -1n) {
         return 0n;
       }
+      const gasPrice = await client.getGasPrice();
+      return gasPrice;
     },
     refetchInterval,
     enabled: block > -1n,

@@ -1,8 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
-import { Block, createPublicClient, http } from 'viem';
-import { Chain } from 'viem/chains';
-import { getBlockNumberFromTimestamp } from '../utils/getBlockNumberFromTimestamp';
-import { useBlock } from './useBlock';
+import { useQuery } from "@tanstack/react-query";
+import { createPublicClient, http } from "viem";
+import type { Block } from "viem";
+import type { Chain } from "viem/chains";
+import { getBlockNumberFromTimestamp } from "../utils/getBlockNumberFromTimestamp";
+import { useBlock } from "./useBlock";
 
 export interface BlockData {
   number: bigint;
@@ -24,8 +25,8 @@ interface UseBlocksOptions {
 }
 
 export const useBlocks = (
-  { blockNumber, timestamp, limit = 1 }: UseBlocksOptions = {},
-  chain: Chain
+  chain: Chain,
+  { blockNumber, timestamp, limit = 1 }: UseBlocksOptions = {}
 ) => {
   const client = createPublicClient({
     chain,
@@ -35,23 +36,31 @@ export const useBlocks = (
   const { block } = useBlock();
 
   return useQuery<BlockData[]>({
-    queryKey: ['blocks', chain.id, blockNumber?.toString(), timestamp, limit, block.toString()],
+    queryKey: [
+      "blocks",
+      chain.id,
+      blockNumber?.toString(),
+      timestamp,
+      limit,
+      block.toString(),
+    ],
     queryFn: async () => {
       if (blockNumber !== undefined) {
         // Fetch a single block by block number
         const block = await client.getBlock({ blockNumber });
         return [transformBlock(block)];
-      } else if (timestamp !== undefined) {
+      }
+      if (timestamp !== undefined) {
         // Fetch a single block by timestamp
         const blockNumber = await getBlockNumberFromTimestamp(chain, timestamp);
         const block = await client.getBlock({ blockNumber });
         return [transformBlock(block)];
-      } else if (block > -1) {
+      }
+      if (block > -1) {
         const latestBlock = await client.getBlock({ blockNumber: block });
         return [transformBlock(latestBlock)];
-      } else {
-        return [];
       }
+      return [];
     },
     enabled: block > -1,
   });
