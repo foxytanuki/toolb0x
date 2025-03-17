@@ -118,51 +118,54 @@ export default function Header() {
           <DrawerHeader borderBottomWidth="1px" />
           <DrawerBody>
             <VStack spacing={4}>
-              <Link to="/" width="100%">
-                <Box
-                  as="h1"
-                  fontSize={["2xl", "3xl", "4xl"]}
-                  fontWeight="extrabold"
-                  color={colorMode === "light" ? "gray.600" : "gray.200"}
-                  textAlign="center"
-                  mt={3}
-                  mb={6}
+              <Box width="100%">
+                <Link to="/">
+                  <Box
+                    as="h1"
+                    fontSize={["2xl", "3xl", "4xl"]}
+                    fontWeight="extrabold"
+                    color={colorMode === "light" ? "gray.600" : "gray.200"}
+                    textAlign="center"
+                    mt={3}
+                    mb={6}
+                    onClick={onClose}
+                  >
+                    Toolb0x
+                  </Box>
+                </Link>
+              </Box>
+              <Box width="100%">
+                <Link
+                  to="/fee"
+                  className="[&.active]:font-bold"
                   onClick={onClose}
                 >
-                  Toolb0x
-                </Box>
-              </Link>
-              <Link
-                to="/fee"
-                className="[&.active]:font-bold"
-                width="100%"
-                onClick={onClose}
-              >
-                <Button
-                  width="100%"
-                  colorScheme="blue"
-                  variant="ghost"
-                  size="md"
+                  <Button
+                    width="100%"
+                    colorScheme="blue"
+                    variant="ghost"
+                    size="md"
+                  >
+                    GasFee
+                  </Button>
+                </Link>
+              </Box>
+              <Box width="100%">
+                <Link
+                  to="/blocks"
+                  className="[&.active]:font-bold"
+                  onClick={onClose}
                 >
-                  GasFee
-                </Button>
-              </Link>
-              <Link
-                to="/blocks"
-                className="[&.active]:font-bold"
-                width="100%"
-                onClick={onClose}
-              >
-                <Button
-                  mb={4}
-                  width="100%"
-                  colorScheme="blue"
-                  variant="ghost"
-                  size="md"
-                >
-                  BlockSearch
-                </Button>
-              </Link>
+                  <Button
+                    width="100%"
+                    colorScheme="blue"
+                    variant="ghost"
+                    size="md"
+                  >
+                    BlockSearch
+                  </Button>
+                </Link>
+              </Box>
               <Tooltip label="Change refetch interval">
                 <Button
                   aria-label="Change refetch interval"
