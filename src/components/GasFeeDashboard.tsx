@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   Box,
   Text,
@@ -9,18 +9,22 @@ import {
   FormLabel,
   Input,
   Select,
-} from '@chakra-ui/react';
-import { useFeeHistory } from '../hooks/useFeeHistory';
-import { usePolygonGasStation } from '../hooks/usePolygonGasStation';
-import { formatGwei } from 'viem';
-import LoadingSpinner from './LoadingSpinner';
-import { useChain } from '../hooks/useChain';
-import { useGasPrice } from '../hooks/useGasPrice';
+  Spinner,
+} from "@chakra-ui/react";
+import { useFeeHistory } from "../hooks/useFeeHistory";
+import { usePolygonGasStation } from "../hooks/usePolygonGasStation";
+import { formatGwei, formatUnits } from "viem";
+import LoadingSpinner from "./LoadingSpinner";
+import { useChain } from "../hooks/useChain";
+import { useGasPrice } from "../hooks/useGasPrice";
+import { useTokenPrice } from "../hooks/useTokenPrice";
 
 const GasFeeDashboard = () => {
   const [gasUsage, setGasUsage] = useState<bigint>(5760000n);
   const [fee, setFee] = useState<bigint>(0n);
-  const [gasUsageOption, setGasUsageOption] = useState<string>('contractDeploy');
+  const [feeUSD, setFeeUSD] = useState<number | null>(null);
+  const [gasUsageOption, setGasUsageOption] =
+    useState<string>("contractDeploy");
   const { colorMode } = useColorMode();
   const { chain } = useChain();
   const {
@@ -36,6 +40,11 @@ const GasFeeDashboard = () => {
   const { data: gasPrice, isLoading: gasPriceLoading } = useGasPrice(chain);
   const { data: polygonGasStation, isLoading: polygonGasStationLoading } =
     usePolygonGasStation(chain);
+  const {
+    price: nativeTokenPrice,
+    isLoading: priceLoading,
+    error: priceError,
+  } = useTokenPrice(chain);
 
   const baseFeePerGas = feeHistory?.baseFeePerGas ?? 0n;
   const priorityFeePerGas = feeHistory?.rewards[0] ?? 0n;
@@ -43,24 +52,37 @@ const GasFeeDashboard = () => {
 
   useEffect(() => {
     if (gasPrice) {
-      const fee = (gasUsage * gasPrice) / 1000000000n;
-      setFee(fee);
+      const calculatedFee = gasUsage * gasPrice;
+      setFee(calculatedFee);
+    } else {
+      setFee(0n);
     }
   }, [gasPrice, gasUsage]);
 
   useEffect(() => {
-    // gasUsageOptionの変更に応じてgasUsageを更新
+    if (fee !== null && nativeTokenPrice !== null && chain) {
+      const feeInNativeToken = Number.parseFloat(
+        formatUnits(fee, chain.nativeCurrency.decimals)
+      );
+      const calculatedFeeUSD = feeInNativeToken * nativeTokenPrice;
+      setFeeUSD(calculatedFeeUSD);
+    } else {
+      setFeeUSD(null);
+    }
+  }, [fee, nativeTokenPrice, chain]);
+
+  useEffect(() => {
     switch (gasUsageOption) {
-      case 'contractDeploy':
+      case "contractDeploy":
         setGasUsage(5760000n);
         break;
-      case 'mint':
+      case "mint":
         setGasUsage(200000n);
         break;
-      case 'setDefaultRoyalty':
+      case "setDefaultRoyalty":
         setGasUsage(30500n);
         break;
-      case 'tokenTransfer':
+      case "tokenTransfer":
         setGasUsage(21000n);
         break;
       default:
@@ -68,15 +90,23 @@ const GasFeeDashboard = () => {
     }
   }, [gasUsageOption]);
 
+  const formatUSD = (amount: number | null) => {
+    if (amount === null) return "N/A";
+    return amount.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
+  };
+
   return (
     <>
       <Box
         as="main"
         w="98%"
-        maxW={['container.sm', 'container.md', 'container.lg']}
+        maxW={["container.sm", "container.md", "container.lg"]}
         mx="auto"
         p={[4, 6, 8]}
-        bg={colorMode === 'light' ? 'white' : 'gray.800'}
+        bg={colorMode === "light" ? "white" : "gray.800"}
         borderRadius="md"
         boxShadow="base"
       >
@@ -95,12 +125,12 @@ const GasFeeDashboard = () => {
                 <Text>Total: {formatGwei(totalFeePerGas)} Gwei</Text>
               </Box>
               {gasPriceLoading && <LoadingSpinner />}
-              {gasPrice?.toString && (
+              {gasPrice?.toString() && (
                 <Box>
                   <Box as="h3" fontSize="xl">
                     eth_gasPrice
                   </Box>
-                  <Text>GasPrice: {formatGwei(gasPrice)}Gwei</Text>
+                  <Text>GasPrice: {formatGwei(gasPrice)} Gwei</Text>
                 </Box>
               )}
               {polygonGasStationLoading && <LoadingSpinner />}
@@ -110,14 +140,19 @@ const GasFeeDashboard = () => {
                     Polygon Gas Station (Fast)
                   </Box>
                   <Text>
-                    BaseFee:{' '}
-                    {(polygonGasStation.maxFee - polygonGasStation.maxPriorityFee).toFixed(9)}
+                    BaseFee:{" "}
+                    {(
+                      polygonGasStation.maxFee -
+                      polygonGasStation.maxPriorityFee
+                    ).toFixed(9)}{" "}
                     Gwei
                   </Text>
-                  <Text>MaxPriorityFee: {polygonGasStation.maxPriorityFee.toString()}Gwei</Text>
                   <Text>
-                    MaxFee: {polygonGasStation.maxFee.toString()}
-                    Gwei
+                    MaxPriorityFee:{" "}
+                    {polygonGasStation.maxPriorityFee.toFixed(9)} Gwei
+                  </Text>
+                  <Text>
+                    MaxFee: {polygonGasStation.maxFee.toFixed(9)} Gwei
                   </Text>
                 </Box>
               )}
@@ -128,11 +163,11 @@ const GasFeeDashboard = () => {
       <Box
         as="main"
         w="100%"
-        maxW={['container.sm', 'container.md', 'container.lg']}
+        maxW={["container.sm", "container.md", "container.lg"]}
         mx="auto"
         mt={4}
         p={[4, 6, 8]}
-        bg={colorMode === 'light' ? 'white' : 'gray.800'}
+        bg={colorMode === "light" ? "white" : "gray.800"}
         borderRadius="md"
         boxShadow="base"
       >
@@ -142,31 +177,71 @@ const GasFeeDashboard = () => {
           </Box>
           <Box>
             <FormControl>
-              <FormLabel htmlFor="gasUsage">Gas Usage</FormLabel>
+              <FormLabel htmlFor="gasUsageOption">
+                Transaction Type / Gas Usage
+              </FormLabel>
               <HStack>
                 <Select
                   id="gasUsageOption"
                   value={gasUsageOption}
                   onChange={(e) => setGasUsageOption(e.target.value)}
                 >
-                  <option value="contractDeploy">Contract Deploy - 5,760,000</option>
+                  <option value="contractDeploy">
+                    Contract Deploy - 5,760,000
+                  </option>
                   <option value="mint">Mint - 200,000</option>
-                  <option value="setDefaultRoyalty">Set Default Royalty - 30,500</option>
+                  <option value="setDefaultRoyalty">
+                    Set Default Royalty - 30,500
+                  </option>
                   <option value="tokenTransfer">Token Transfer - 21,000</option>
                 </Select>
                 <Input
                   id="gasUsage"
                   type="number"
                   value={gasUsage.toString()}
-                  onChange={(e) => setGasUsage(BigInt(e.target.value))}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    try {
+                      setGasUsage(BigInt(value));
+                    } catch (err: unknown) {
+                      console.error("Invalid gas usage input:", value, err);
+                    }
+                  }}
+                  placeholder="Custom Gas Usage"
                 />
               </HStack>
             </FormControl>
-            {fee !== null && (
-              <Text mt={4}>
-                Transaction Fee: {formatGwei(fee)} {chain.nativeCurrency.symbol}
-              </Text>
-            )}
+            <Box mt={4}>
+              {gasPriceLoading ? (
+                <Spinner size="sm" />
+              ) : fee !== null && chain ? (
+                <Text>
+                  Estimated Fee:{" "}
+                  {formatUnits(fee, chain.nativeCurrency.decimals)}{" "}
+                  {chain.nativeCurrency.symbol}
+                  {priceLoading ? (
+                    <Spinner size="xs" ml={2} />
+                  ) : feeUSD !== null ? (
+                    ` (~${formatUSD(feeUSD)})`
+                  ) : priceError ? (
+                    <Text as="span" color="red.500" ml={2}>
+                      (Price Error)
+                    </Text>
+                  ) : (
+                    <Text as="span" ml={2}>
+                      (USD N/A)
+                    </Text>
+                  )}
+                </Text>
+              ) : (
+                <Text>Calculating fee...</Text>
+              )}
+              {priceError && !priceLoading && (
+                <Text color="red.500" fontSize="sm">
+                  Could not load USD price: {priceError.message}
+                </Text>
+              )}
+            </Box>
           </Box>
         </VStack>
       </Box>
