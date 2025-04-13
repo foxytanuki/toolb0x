@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import type { Chain } from "viem";
+import { PriceFeed, ChainlinkProvider } from "@foxytanuki/crypto-price";
 
 // Define mapping from chain ID to CoinGecko asset platform ID and native token ID
 const chainToCoinGeckoId: Record<
@@ -7,10 +8,7 @@ const chainToCoinGeckoId: Record<
   { platformId: string; tokenId: string }
 > = {
   1: { platformId: "ethereum", tokenId: "ethereum" }, // Ethereum Mainnet
-  137: { platformId: "polygon-pos", tokenId: "matic-network" }, // Polygon Mainnet
-  80001: { platformId: "polygon-pos", tokenId: "matic-network" }, // Polygon Mumbai (Note: Using mainnet token ID for price)
   11155111: { platformId: "ethereum", tokenId: "ethereum" }, // Sepolia (Note: Using mainnet token ID for price)
-  // Add other chains as needed
 };
 
 export const useTokenPrice = (chain: Chain | undefined) => {
@@ -25,26 +23,19 @@ export const useTokenPrice = (chain: Chain | undefined) => {
         return;
       }
 
-      const { tokenId } = chainToCoinGeckoId[chain.id];
+      // const { tokenId } = chainToCoinGeckoId[chain.id];
       setIsLoading(true);
       setError(null);
 
       try {
-        // Use a proxy if running into CORS issues locally, or fetch directly
-        // const response = await fetch(`/api/coingecko/simple/price?ids=${tokenId}&vs_currencies=usd`);
-        const response = await fetch(
-          `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=usd`
-        );
+        const chainlinkProvider = new ChainlinkProvider({
+          baseUrl: "https://ethereum-rpc.publicnode.com",
+        });
+        const priceFeed = await PriceFeed.create([chainlinkProvider]);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        if (data?.[tokenId]?.usd) {
-          setPrice(data[tokenId].usd);
-        } else {
-          throw new Error("Invalid data format received from CoinGecko");
-        }
+        // TODO: Add support for other chains
+        const price = await priceFeed.getPrice("ETH/USD");
+        setPrice(price.price);
       } catch (e) {
         console.error("Failed to fetch token price:", e);
         setError(
