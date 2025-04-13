@@ -2,15 +2,6 @@ import { useState, useEffect } from "react";
 import type { Chain } from "viem";
 import { PriceFeed, ChainlinkProvider } from "@foxytanuki/crypto-price";
 
-// Define mapping from chain ID to CoinGecko asset platform ID and native token ID
-const chainToCoinGeckoId: Record<
-  number,
-  { platformId: string; tokenId: string }
-> = {
-  1: { platformId: "ethereum", tokenId: "ethereum" }, // Ethereum Mainnet
-  11155111: { platformId: "ethereum", tokenId: "ethereum" }, // Sepolia (Note: Using mainnet token ID for price)
-};
-
 export const useTokenPrice = (chain: Chain | undefined) => {
   const [price, setPrice] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -18,7 +9,7 @@ export const useTokenPrice = (chain: Chain | undefined) => {
 
   useEffect(() => {
     const fetchPrice = async () => {
-      if (!chain || !chainToCoinGeckoId[chain.id]) {
+      if (!chain) {
         setPrice(null); // Reset price if chain is not supported or undefined
         return;
       }
