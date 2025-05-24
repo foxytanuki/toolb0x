@@ -1,14 +1,16 @@
-import { Wallet } from 'ethers';
-import * as bitcoin from 'bitcoinjs-lib';
-import * as ecc from 'tiny-secp256k1';
-import { ECPairFactory } from 'ecpair';
 import { Buffer } from 'buffer';
+import * as bitcoin from 'bitcoinjs-lib';
+import { ECPairFactory } from 'ecpair';
+import { Wallet } from 'ethers';
+import * as ecc from 'tiny-secp256k1';
 
 const ECPair = ECPairFactory(ecc);
 
 export function generateAddresses(privateKey: string) {
   // Remove '0x' prefix if present
-  const cleanPrivateKey = privateKey.startsWith('0x') ? privateKey.slice(2) : privateKey;
+  const cleanPrivateKey = privateKey.startsWith('0x')
+    ? privateKey.slice(2)
+    : privateKey;
 
   // Ethereum Address Generation
   const ethWallet = new Wallet(privateKey);

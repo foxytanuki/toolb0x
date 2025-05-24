@@ -1,6 +1,6 @@
-import { createContext, useState, type ReactNode, useEffect } from "react";
-import { useChain } from "../hooks/useChain";
-import { createPublicClient, http } from "viem";
+import { type ReactNode, createContext, useEffect, useState } from 'react';
+import { http, createPublicClient } from 'viem';
+import { useChain } from '../hooks/useChain';
 
 interface BlockContextType {
   block: bigint;
@@ -20,9 +20,14 @@ export const BlockProvider = ({ children }: { children: ReactNode }) => {
       chain,
       transport: http(),
     });
-    client.getBlockNumber().then((blockNumber) => {
-      setBlock(blockNumber);
-    });
+    client
+      .getBlockNumber()
+      .then((blockNumber) => {
+        setBlock(blockNumber);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch block number:', error);
+      });
   }, [chain]);
 
   return (

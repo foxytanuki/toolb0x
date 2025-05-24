@@ -1,16 +1,16 @@
-import { Select } from "@chakra-ui/react";
+import { Select } from '@chakra-ui/react';
 import {
   type Chain,
-  mainnet,
-  sepolia,
-  base,
-  baseSepolia,
-  optimism,
-  optimismSepolia,
   arbitrum,
   arbitrumSepolia,
-} from "viem/chains";
-import { useChain } from "../hooks/useChain";
+  base,
+  baseSepolia,
+  mainnet,
+  optimism,
+  optimismSepolia,
+  sepolia,
+} from 'viem/chains';
+import { useChain } from '../hooks/useChain';
 
 const chains: Chain[] = [
   mainnet,

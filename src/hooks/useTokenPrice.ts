@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import type { Chain } from "viem";
-import { PriceFeed, ChainlinkProvider } from "@foxytanuki/crypto-price";
+import { ChainlinkProvider, PriceFeed } from '@foxytanuki/crypto-price';
+import { useEffect, useState } from 'react';
+import type { Chain } from 'viem';
 
 export const useTokenPrice = (chain: Chain | undefined) => {
   const [price, setPrice] = useState<number | null>(null);
@@ -20,17 +20,17 @@ export const useTokenPrice = (chain: Chain | undefined) => {
 
       try {
         const chainlinkProvider = new ChainlinkProvider({
-          baseUrl: "https://ethereum-rpc.publicnode.com",
+          baseUrl: 'https://ethereum-rpc.publicnode.com',
         });
         const priceFeed = await PriceFeed.create([chainlinkProvider]);
 
         // TODO: Add support for other chains
-        const price = await priceFeed.getPrice("ETH/USD");
+        const price = await priceFeed.getPrice('ETH/USD');
         setPrice(price.price);
       } catch (e) {
-        console.error("Failed to fetch token price:", e);
+        console.error('Failed to fetch token price:', e);
         setError(
-          e instanceof Error ? e : new Error("An unknown error occurred")
+          e instanceof Error ? e : new Error('An unknown error occurred')
         );
         setPrice(null);
       } finally {

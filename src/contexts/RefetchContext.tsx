@@ -1,4 +1,4 @@
-import { createContext, useState, type ReactNode, useEffect } from "react";
+import { type ReactNode, createContext, useEffect, useState } from 'react';
 
 interface RefetchContextType {
   refetchInterval: number;
@@ -11,7 +11,7 @@ export const RefetchContext = createContext<RefetchContextType | undefined>(
 
 export const RefetchProvider = ({ children }: { children: ReactNode }) => {
   const [refetchInterval, setRefetchInterval] = useState<number>(() => {
-    const interval = localStorage.getItem("refetchInterval");
+    const interval = localStorage.getItem('refetchInterval');
     if (interval) {
       return JSON.parse(interval);
     }
@@ -19,7 +19,7 @@ export const RefetchProvider = ({ children }: { children: ReactNode }) => {
   });
 
   useEffect(() => {
-    localStorage.setItem("refetchInterval", JSON.stringify(refetchInterval));
+    localStorage.setItem('refetchInterval', JSON.stringify(refetchInterval));
   }, [refetchInterval]);
 
   return (

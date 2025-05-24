@@ -1,5 +1,5 @@
-import { Box, Heading, Text, VStack, HStack, Link } from "@chakra-ui/react";
-import type { Chain, PublicClient, Block } from "viem";
+import { Box, HStack, Heading, Link, Text, VStack } from '@chakra-ui/react';
+import type { Block, Chain, PublicClient } from 'viem';
 
 interface BlockInfoProps {
   block: Block;
@@ -15,7 +15,7 @@ const BlockInfo: React.FC<BlockInfoProps> = ({ block, chain, client }) => {
     <Box p={4} borderWidth={1} borderRadius="md">
       <VStack spacing={4} align="stretch">
         <Heading as="h2" fontFamily="Jersey 25">
-          Block:{" "}
+          Block:{' '}
           <Link
             href={`${explorerUrl}/block/${block.number?.toString()}`}
             isExternal
@@ -24,8 +24,8 @@ const BlockInfo: React.FC<BlockInfoProps> = ({ block, chain, client }) => {
           </Link>
         </Heading>
         <Text>
-          <strong>Timestamp:</strong>{" "}
-          {new Date(Number(block.timestamp) * 1000).toLocaleString()}
+          <strong>Timestamp:</strong>{' '}
+          {new Date(Number(block.timestamp * 1000n)).toLocaleString()}
         </Text>
         <Text>
           <strong>Transaction Count:</strong> {block.transactions.length}
@@ -42,7 +42,7 @@ const BlockInfo: React.FC<BlockInfoProps> = ({ block, chain, client }) => {
           </Text>
         )}
         <Text>
-          <strong>Miner:</strong>{" "}
+          <strong>Miner:</strong>{' '}
           {explorerUrl ? (
             <Link
               href={`${explorerUrl}/address/${block.miner}`}
@@ -55,13 +55,11 @@ const BlockInfo: React.FC<BlockInfoProps> = ({ block, chain, client }) => {
             block.miner
           )}
         </Text>
-        {/* <TransactionGasStats client={client} blockNumber={block.number} /> */}
-        {/* <TransactionList transactions={block.transactions} chain={chain} /> */}
 
         <HStack>
           <Box>
             <Text fontSize="xs" color="gray.500">
-              Block data retrieved via RPC:{" "}
+              Block data retrieved via RPC:{' '}
               <Link href={client.transport.url} isExternal>
                 {client.transport.url}
               </Link>

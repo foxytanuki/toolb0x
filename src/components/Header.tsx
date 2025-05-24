@@ -1,28 +1,28 @@
-import { useEffect } from "react";
+import { HamburgerIcon, MoonIcon, SunIcon, TimeIcon } from '@chakra-ui/icons';
 import {
   Box,
-  IconButton,
-  useColorMode,
-  Text,
   Button,
-  Tooltip,
   Drawer,
   DrawerBody,
+  DrawerContent,
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
-  DrawerContent,
-  useDisclosure,
+  IconButton,
+  Text,
+  Tooltip,
   VStack,
+  useColorMode,
+  useDisclosure,
   useMediaQuery,
-} from "@chakra-ui/react";
-import { Link } from "@tanstack/react-router";
-import { HamburgerIcon, SunIcon, MoonIcon, TimeIcon } from "@chakra-ui/icons";
-import ChainSelector from "./ChainSelector";
-import { useBlock } from "../hooks/useBlock";
-import { useChain } from "../hooks/useChain";
-import { createPublicClient, http } from "viem";
-import { useRefetch } from "../hooks/useRefetch";
+} from '@chakra-ui/react';
+import { Link } from '@tanstack/react-router';
+import { useEffect } from 'react';
+import { http, createPublicClient } from 'viem';
+import { useBlock } from '../hooks/useBlock';
+import { useChain } from '../hooks/useChain';
+import { useRefetch } from '../hooks/useRefetch';
+import ChainSelector from './ChainSelector';
 
 export default function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -34,7 +34,7 @@ export default function Header() {
   });
   const { refetchInterval, setRefetchInterval } = useRefetch();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
+  const [isLargerThan768] = useMediaQuery('(min-width: 768px)');
 
   useEffect(() => {
     const fetchLatestBlockNumber = async () => {
@@ -54,7 +54,7 @@ export default function Header() {
         color="white"
         py={4}
         m={4}
-        borderRadius={"md"}
+        borderRadius={'md'}
         display="flex"
         alignItems="center"
       >
@@ -97,12 +97,12 @@ export default function Header() {
                   ml={4}
                   mr={4}
                 >
-                  {refetchInterval === 3000 ? "3s" : "1s"}
+                  {refetchInterval === 3000 ? '3s' : '1s'}
                 </Button>
               </Tooltip>
               <IconButton
                 aria-label="Toggle color mode"
-                icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+                icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
                 onClick={toggleColorMode}
                 variant="ghost"
                 color="white"
@@ -122,9 +122,9 @@ export default function Header() {
                 <Link to="/">
                   <Box
                     as="h1"
-                    fontSize={["2xl", "3xl", "4xl"]}
+                    fontSize={['2xl', '3xl', '4xl']}
                     fontWeight="extrabold"
-                    color={colorMode === "light" ? "gray.600" : "gray.200"}
+                    color={colorMode === 'light' ? 'gray.600' : 'gray.200'}
                     textAlign="center"
                     mt={3}
                     mb={6}
@@ -174,9 +174,9 @@ export default function Header() {
                   }
                   leftIcon={<TimeIcon />}
                   variant="ghost"
-                  colorScheme={colorMode === "light" ? "blue" : "teal"}
+                  colorScheme={colorMode === 'light' ? 'blue' : 'teal'}
                 >
-                  {refetchInterval === 3000 ? "3s" : "1s"}
+                  {refetchInterval === 3000 ? '3s' : '1s'}
                 </Button>
               </Tooltip>
             </VStack>

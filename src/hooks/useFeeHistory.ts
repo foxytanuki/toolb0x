@@ -1,8 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
-import { createPublicClient, http } from "viem";
-import type { Chain } from "viem/chains";
-import { useBlock } from "./useBlock";
-import { useRefetch } from "./useRefetch";
+import { useQuery } from '@tanstack/react-query';
+import { http, createPublicClient } from 'viem';
+import type { Chain } from 'viem/chains';
+import { useBlock } from './useBlock';
+import { useRefetch } from './useRefetch';
 
 interface FeeHistoryData {
   baseFeePerGas: bigint;
@@ -28,10 +28,10 @@ export const useFeeHistory = (
   const { refetchInterval } = useRefetch();
 
   return useQuery<FeeHistoryData, Error>({
-    queryKey: ["feeHistory", chain.id, blockCount],
+    queryKey: ['feeHistory', chain.id, blockCount],
     queryFn: async () => {
       if (block === undefined) {
-        throw new Error("block is undefined");
+        throw new Error('block is undefined');
       }
       const rewardPercentiles = [75];
       const { baseFeePerGas, gasUsedRatio, oldestBlock, reward } =

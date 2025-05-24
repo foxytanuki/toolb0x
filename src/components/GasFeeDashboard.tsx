@@ -1,30 +1,30 @@
-import { useEffect, useState } from "react";
 import {
   Box,
-  Text,
-  VStack,
-  HStack,
-  useColorMode,
   FormControl,
   FormLabel,
+  HStack,
   Input,
   Select,
   Spinner,
-} from "@chakra-ui/react";
-import { useFeeHistory } from "../hooks/useFeeHistory";
-import { usePolygonGasStation } from "../hooks/usePolygonGasStation";
-import { formatGwei, formatUnits } from "viem";
-import LoadingSpinner from "./LoadingSpinner";
-import { useChain } from "../hooks/useChain";
-import { useGasPrice } from "../hooks/useGasPrice";
-import { useTokenPrice } from "../hooks/useTokenPrice";
+  Text,
+  VStack,
+  useColorMode,
+} from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { formatGwei, formatUnits } from 'viem';
+import { useChain } from '../hooks/useChain';
+import { useFeeHistory } from '../hooks/useFeeHistory';
+import { useGasPrice } from '../hooks/useGasPrice';
+import { usePolygonGasStation } from '../hooks/usePolygonGasStation';
+import { useTokenPrice } from '../hooks/useTokenPrice';
+import LoadingSpinner from './LoadingSpinner';
 
 const GasFeeDashboard = () => {
   const [gasUsage, setGasUsage] = useState<bigint>(5760000n);
   const [fee, setFee] = useState<bigint>(0n);
   const [feeUSD, setFeeUSD] = useState<number | null>(null);
   const [gasUsageOption, setGasUsageOption] =
-    useState<string>("contractDeploy");
+    useState<string>('contractDeploy');
   const { colorMode } = useColorMode();
   const { chain } = useChain();
   const {
@@ -73,16 +73,16 @@ const GasFeeDashboard = () => {
 
   useEffect(() => {
     switch (gasUsageOption) {
-      case "contractDeploy":
+      case 'contractDeploy':
         setGasUsage(5760000n);
         break;
-      case "mint":
+      case 'mint':
         setGasUsage(200000n);
         break;
-      case "setDefaultRoyalty":
+      case 'setDefaultRoyalty':
         setGasUsage(30500n);
         break;
-      case "tokenTransfer":
+      case 'tokenTransfer':
         setGasUsage(21000n);
         break;
       default:
@@ -91,10 +91,10 @@ const GasFeeDashboard = () => {
   }, [gasUsageOption]);
 
   const formatUSD = (amount: number | null) => {
-    if (amount === null) return "N/A";
-    return amount.toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
+    if (amount === null) return 'N/A';
+    return amount.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
     });
   };
 
@@ -103,10 +103,10 @@ const GasFeeDashboard = () => {
       <Box
         as="main"
         w="98%"
-        maxW={["container.sm", "container.md", "container.lg"]}
+        maxW={['container.sm', 'container.md', 'container.lg']}
         mx="auto"
         p={[4, 6, 8]}
-        bg={colorMode === "light" ? "white" : "gray.800"}
+        bg={colorMode === 'light' ? 'white' : 'gray.800'}
         borderRadius="md"
         boxShadow="base"
       >
@@ -140,15 +140,15 @@ const GasFeeDashboard = () => {
                     Polygon Gas Station (Fast)
                   </Box>
                   <Text>
-                    BaseFee:{" "}
+                    BaseFee:{' '}
                     {(
                       polygonGasStation.maxFee -
                       polygonGasStation.maxPriorityFee
-                    ).toFixed(9)}{" "}
+                    ).toFixed(9)}{' '}
                     Gwei
                   </Text>
                   <Text>
-                    MaxPriorityFee:{" "}
+                    MaxPriorityFee:{' '}
                     {polygonGasStation.maxPriorityFee.toFixed(9)} Gwei
                   </Text>
                   <Text>
@@ -163,11 +163,11 @@ const GasFeeDashboard = () => {
       <Box
         as="main"
         w="100%"
-        maxW={["container.sm", "container.md", "container.lg"]}
+        maxW={['container.sm', 'container.md', 'container.lg']}
         mx="auto"
         mt={4}
         p={[4, 6, 8]}
-        bg={colorMode === "light" ? "white" : "gray.800"}
+        bg={colorMode === 'light' ? 'white' : 'gray.800'}
         borderRadius="md"
         boxShadow="base"
       >
@@ -204,7 +204,7 @@ const GasFeeDashboard = () => {
                     try {
                       setGasUsage(BigInt(value));
                     } catch (err: unknown) {
-                      console.error("Invalid gas usage input:", value, err);
+                      console.error('Invalid gas usage input:', value, err);
                     }
                   }}
                   placeholder="Custom Gas Usage"
@@ -216,8 +216,8 @@ const GasFeeDashboard = () => {
                 <Spinner size="sm" />
               ) : fee !== null && chain ? (
                 <Text>
-                  Estimated Fee:{" "}
-                  {formatUnits(fee, chain.nativeCurrency.decimals)}{" "}
+                  Estimated Fee:{' '}
+                  {formatUnits(fee, chain.nativeCurrency.decimals)}{' '}
                   {chain.nativeCurrency.symbol}
                   {priceLoading ? (
                     <Spinner size="xs" ml={2} />
