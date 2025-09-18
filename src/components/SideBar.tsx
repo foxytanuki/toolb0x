@@ -52,6 +52,13 @@ export default function SideBar() {
             </Button>
           </Link>
         </Box>
+        <Box width="100%">
+          <Link to="/tx" className="[&.active]:font-bold">
+            <Button width="100%" colorScheme="blue" variant="ghost" size="md">
+              TxExplorer
+            </Button>
+          </Link>
+        </Box>
       </VStack>
     </Box>
   );

@@ -16,12 +16,19 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
+const TxLazyImport = createFileRoute('/tx')()
 const FeeLazyImport = createFileRoute('/fee')()
 const BlocksLazyImport = createFileRoute('/blocks')()
 const AddressLazyImport = createFileRoute('/address')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
+
+const TxLazyRoute = TxLazyImport.update({
+  id: '/tx',
+  path: '/tx',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/tx.lazy').then((d) => d.Route))
 
 const FeeLazyRoute = FeeLazyImport.update({
   id: '/fee',
@@ -79,6 +86,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FeeLazyImport
       parentRoute: typeof rootRoute
     }
+    '/tx': {
+      id: '/tx'
+      path: '/tx'
+      fullPath: '/tx'
+      preLoaderRoute: typeof TxLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -89,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/address': typeof AddressLazyRoute
   '/blocks': typeof BlocksLazyRoute
   '/fee': typeof FeeLazyRoute
+  '/tx': typeof TxLazyRoute
 }
 
 export interface FileRoutesByTo {
@@ -96,6 +111,7 @@ export interface FileRoutesByTo {
   '/address': typeof AddressLazyRoute
   '/blocks': typeof BlocksLazyRoute
   '/fee': typeof FeeLazyRoute
+  '/tx': typeof TxLazyRoute
 }
 
 export interface FileRoutesById {
@@ -104,14 +120,15 @@ export interface FileRoutesById {
   '/address': typeof AddressLazyRoute
   '/blocks': typeof BlocksLazyRoute
   '/fee': typeof FeeLazyRoute
+  '/tx': typeof TxLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/address' | '/blocks' | '/fee'
+  fullPaths: '/' | '/address' | '/blocks' | '/fee' | '/tx'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/address' | '/blocks' | '/fee'
-  id: '__root__' | '/' | '/address' | '/blocks' | '/fee'
+  to: '/' | '/address' | '/blocks' | '/fee' | '/tx'
+  id: '__root__' | '/' | '/address' | '/blocks' | '/fee' | '/tx'
   fileRoutesById: FileRoutesById
 }
 
@@ -120,6 +137,7 @@ export interface RootRouteChildren {
   AddressLazyRoute: typeof AddressLazyRoute
   BlocksLazyRoute: typeof BlocksLazyRoute
   FeeLazyRoute: typeof FeeLazyRoute
+  TxLazyRoute: typeof TxLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -127,6 +145,7 @@ const rootRouteChildren: RootRouteChildren = {
   AddressLazyRoute: AddressLazyRoute,
   BlocksLazyRoute: BlocksLazyRoute,
   FeeLazyRoute: FeeLazyRoute,
+  TxLazyRoute: TxLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -142,7 +161,8 @@ export const routeTree = rootRoute
         "/",
         "/address",
         "/blocks",
-        "/fee"
+        "/fee",
+        "/tx"
       ]
     },
     "/": {
@@ -156,6 +176,9 @@ export const routeTree = rootRoute
     },
     "/fee": {
       "filePath": "fee.lazy.tsx"
+    },
+    "/tx": {
+      "filePath": "tx.lazy.tsx"
     }
   }
 }

@@ -166,6 +166,22 @@ export default function Header() {
                   </Button>
                 </Link>
               </Box>
+              <Box width="100%">
+                <Link
+                  to="/tx"
+                  className="[&.active]:font-bold"
+                  onClick={onClose}
+                >
+                  <Button
+                    width="100%"
+                    colorScheme="blue"
+                    variant="ghost"
+                    size="md"
+                  >
+                    TxExplorer
+                  </Button>
+                </Link>
+              </Box>
               <Tooltip label="Change refetch interval">
                 <Button
                   aria-label="Change refetch interval"
