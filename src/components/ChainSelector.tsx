@@ -11,6 +11,7 @@ import {
   arbitrumSepolia,
 } from "viem/chains";
 import { useChain } from "../hooks/useChain";
+import { hyperevmMainnet, hyperevmTestnet } from "../chains/hyperevm";
 
 const chains: Chain[] = [
   mainnet,
@@ -21,6 +22,8 @@ const chains: Chain[] = [
   optimismSepolia,
   arbitrum,
   arbitrumSepolia,
+  hyperevmMainnet,
+  hyperevmTestnet,
 ];
 
 const ChainSelector = () => {
